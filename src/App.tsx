@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { ReactNode, RefObject } from "react";
-import { Queue } from "./core/DataStructures";
+import { CircularQueue } from "./core/DataStructures";
 
 import { Resolution, NullError, Renderer } from "./core/Renderer";
 import { Point, Triangle, Polygon } from "./core/Geometry";
@@ -97,7 +97,7 @@ const App = ():ReactNode => {
 			renderer.current = new Renderer(current, canvasResolution);
 
 			console.log([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
-			const testQueue: Queue<number> = new Queue<number>([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+			const testQueue: CircularQueue<number> = new CircularQueue<number>([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
 			console.log(testQueue.pop());
 			console.log(testQueue.pop());
 			console.log(testQueue.pop());

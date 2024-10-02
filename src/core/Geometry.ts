@@ -1,5 +1,5 @@
 import { Vector2, Matrix2 } from "./LinearAlgebra";
-import { Queue } from "./DataStructures";
+import { CircularQueue } from "./DataStructures";
 
 
 
@@ -107,7 +107,7 @@ export class Polygon {
 			return [];
 
 		const triangles: Triangle[] = [];
-		const queue: Queue<Point> = new Queue<Point>(this.points);
+		const queue: CircularQueue<Point> = new CircularQueue<Point>(this.points);
 
 		let a: Point = queue.pop()!;
 		let b: Point = queue.pop()!;
@@ -127,4 +127,13 @@ export class Polygon {
 
 		return triangles;
 	}
+
+
+
+	/*
+		Static Methods
+	*/
+	/*public randomPolygon(center: Point, radius: number, numberOfPoints: number, displacement: number) {
+
+	}*/
 }
