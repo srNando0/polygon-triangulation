@@ -1,4 +1,4 @@
-import { Point, Circle } from "./Geometry.ts";
+import { Point, Circle, Triangle, Polygon } from "./Geometry.ts";
 
 
 
@@ -94,6 +94,78 @@ export class Renderer {
 		this.ctx.strokeStyle = color;
 		this.ctx.lineWidth = width;
 		this.ctx.arc(x, y, r, 0, 2*Math.PI);
+		this.ctx.stroke();
+		this.ctx.closePath();
+	}
+
+
+
+	public drawTriangle(
+		triangle: Triangle,
+		color: string = "black",
+		width: number = 1
+	): void {
+		
+		this.ctx.beginPath();
+		this.ctx.strokeStyle = color;
+		this.ctx.lineWidth = width;
+
+		let vertex: Point = triangle.vertices[0];
+		this.ctx.moveTo(vertex.pos.x, vertex.pos.y);
+		vertex = triangle.vertices[1];
+		this.ctx.lineTo(vertex.pos.x, vertex.pos.y);
+		vertex = triangle.vertices[2];
+		this.ctx.lineTo(vertex.pos.x, vertex.pos.y);
+
+		this.ctx.stroke();
+		this.ctx.closePath();
+	}
+
+	public drawTriangles(
+		triangles: Triangle[],
+		color: string = "black",
+		width: number = 1
+	): void {
+		
+		this.ctx.beginPath();
+		this.ctx.strokeStyle = color;
+		this.ctx.lineWidth = width;
+
+		for (const triangle of triangles) {
+			let vertex: Point = triangle.vertices[0];
+			this.ctx.moveTo(vertex.pos.x, vertex.pos.y);
+			vertex = triangle.vertices[1];
+			this.ctx.lineTo(vertex.pos.x, vertex.pos.y);
+			vertex = triangle.vertices[2];
+			this.ctx.lineTo(vertex.pos.x, vertex.pos.y);
+		}
+
+		this.ctx.stroke();
+		this.ctx.closePath();
+	}
+
+
+
+	public drawPolygon(
+		polygon: Polygon,
+		color: string = "black",
+		width: number = 1
+	): void {
+		if (polygon.vertices.length <= 1)
+			return;
+
+		this.ctx.beginPath();
+		this.ctx.strokeStyle = color;
+		this.ctx.lineWidth = width;
+
+		let vertex: Point = polygon.vertices[0];
+		this.ctx.moveTo(vertex.pos.x, vertex.pos.y);
+
+		for (let i = 1; i < polygon.vertices.length; i++) {
+			vertex = polygon.vertices[i];
+			this.ctx.lineTo(vertex.pos.x, vertex.pos.y);
+		}
+
 		this.ctx.stroke();
 		this.ctx.closePath();
 	}

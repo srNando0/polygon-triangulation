@@ -3,7 +3,7 @@ import { ReactNode, RefObject } from "react";
 import { CircularQueue } from "./core/DataStructures";
 
 import { Resolution, NullError, Renderer } from "./core/Renderer";
-import { Point, Triangle, Polygon } from "./core/Geometry";
+import { Point, Circle, Triangle, Polygon } from "./core/Geometry";
 import { Vector2 } from "./core/LinearAlgebra";
 
 
@@ -96,15 +96,7 @@ const App = ():ReactNode => {
 		try {
 			renderer.current = new Renderer(current, canvasResolution);
 
-			console.log([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
-			const testQueue: CircularQueue<number> = new CircularQueue<number>([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
-			console.log(testQueue.pop());
-			console.log(testQueue.pop());
-			console.log(testQueue.pop());
-			console.log(testQueue.pop());
-			console.log(testQueue.getSize());
-			testQueue.push(10);
-			console.log(testQueue.getList());
+
 		} catch (e: unknown) {
 			if (e instanceof Error) {
 				console.error(e.name);
