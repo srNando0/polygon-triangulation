@@ -107,14 +107,6 @@ const App = ():ReactNode => {
 	return (
 		<>
 		<div className='p-2 rounded-xl flex flex-col text-center text-xl'>
-			<div className="flex flex-1 justify-center items-center">
-				<button
-					className="p-2 text-base border-2 border-slate-700 rounded-2xl"
-					onClick={clickTest}
-				>
-					Do test
-				</button>
-			</div>
 			<canvas ref={canvasRef} className="w-3/4 self-center bg-black rounded-xl" style={{imageRendering: "crisp-edges"}}/>
 			<button
 				className="p-2 w-1/2 self-center bg-lime-600 rounded-2xl"
