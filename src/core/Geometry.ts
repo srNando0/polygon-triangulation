@@ -91,10 +91,10 @@ export class Triangle {
 
 
 export class Polygon {
-	public points: Queue<Point>;
+	public points: Point[];
 
 	public constructor(points: Point[]) {
-		this.points = new Queue<Point>(points);
+		this.points = points;
 	}
 
 
@@ -102,7 +102,29 @@ export class Polygon {
 	/*
 		Methods
 	*/
-	/*public earClippingTriangulation(): Triangle[] {
-		
-	}*/
+	public earClippingTriangulation(): Triangle[] {
+		if (this.points.length < 3)
+			return [];
+
+		const triangles: Triangle[] = [];
+		const queue: Queue<Point> = new Queue<Point>(this.points);
+
+		let a: Point = queue.pop()!;
+		let b: Point = queue.pop()!;
+		let c: Point = queue.pop()!;
+
+		while (queue.getSize() > 0) {
+			const triangle: Triangle = new Triangle(a, b, c);
+
+			if (triangle.isInverted()) {
+				queue.push(a);
+				[a, b, c] = [b, c, queue.pop()!];
+			} else {
+				triangles.push(triangle);
+				[b, c] = [c, queue.pop()!];
+			}
+		}
+
+		return triangles;
+	}
 }

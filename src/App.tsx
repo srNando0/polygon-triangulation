@@ -99,6 +99,10 @@ const App = ():ReactNode => {
 			console.log([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
 			const testQueue: Queue<number> = new Queue<number>([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
 			console.log(testQueue.pop());
+			console.log(testQueue.pop());
+			console.log(testQueue.pop());
+			console.log(testQueue.pop());
+			console.log(testQueue.getSize());
 			testQueue.push(10);
 			console.log(testQueue.getList());
 		} catch (e: unknown) {

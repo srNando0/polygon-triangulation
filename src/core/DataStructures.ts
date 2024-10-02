@@ -56,6 +56,11 @@ export class Queue<T> {
 		return data;
 	}
 
+
+
+	/*
+		Getters
+	*/
 	public getList(): T[] {
 		const list: T[] = [];
 
@@ -71,6 +76,10 @@ export class Queue<T> {
 		}
 
 		return list;
+	}
+
+	public getSize(): number {
+		return this.size;
 	}
 }
 
