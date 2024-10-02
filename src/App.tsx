@@ -96,7 +96,7 @@ const App = ():ReactNode => {
 		try {
 			renderer.current = new Renderer(current, canvasResolution);
 
-			console.log([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+			console.log([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
 			const testQueue: CircularQueue<number> = new CircularQueue<number>([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
 			console.log(testQueue.pop());
 			console.log(testQueue.pop());

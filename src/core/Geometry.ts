@@ -57,10 +57,10 @@ export class Point {
 
 
 export class Triangle {
-	public points: [Point, Point, Point];
+	public vertices: [Point, Point, Point];
 
 	public constructor(a: Point, b: Point, c: Point) {
-		this.points = [a, b, c];
+		this.vertices = [a, b, c];
 	}
 
 
@@ -69,7 +69,7 @@ export class Triangle {
 		Methods
 	*/
 	public isInverted(): boolean {
-		const [a, b, c] = this.points;
+		const [a, b, c]: [Point, Point, Point] = this.vertices;
 
 		// vectors u = b - a, v = c - a
 		const u: Vector2 = Point.sub(b, a);
@@ -91,10 +91,10 @@ export class Triangle {
 
 
 export class Polygon {
-	public points: Point[];
+	public vertices: Point[];
 
-	public constructor(points: Point[]) {
-		this.points = points;
+	public constructor(vertices: Point[]) {
+		this.vertices = vertices;
 	}
 
 
@@ -103,12 +103,14 @@ export class Polygon {
 		Methods
 	*/
 	public earClippingTriangulation(): Triangle[] {
-		if (this.points.length < 3)
+		// Exit if there is no triangles
+		if (this.vertices.length < 3)
 			return [];
 
 		const triangles: Triangle[] = [];
-		const queue: CircularQueue<Point> = new CircularQueue<Point>(this.points);
+		const queue: CircularQueue<Point> = new CircularQueue<Point>(this.vertices);
 
+		// Get three points in anti-clockwise order
 		let a: Point = queue.pop()!;
 		let b: Point = queue.pop()!;
 		let c: Point = queue.pop()!;
@@ -117,9 +119,13 @@ export class Polygon {
 			const triangle: Triangle = new Triangle(a, b, c);
 
 			if (triangle.isInverted()) {
+				// Not a diagonal!
+				// Therefore discard the last vertex and get a new one
 				queue.push(a);
 				[a, b, c] = [b, c, queue.pop()!];
 			} else {
+				// A diagonal!
+				// Therefore discard the middle point and get the new first
 				triangles.push(triangle);
 				[b, c] = [c, queue.pop()!];
 			}
