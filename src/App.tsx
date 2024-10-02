@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { ReactNode, RefObject } from "react";
+import { Queue } from "./core/DataStructures";
 
 import { Resolution, NullError, Renderer } from "./core/Renderer";
-import { Point, Circle } from "./core/Geometry";
+import { Point, Triangle, Polygon } from "./core/Geometry";
 import { Vector2 } from "./core/LinearAlgebra";
 
 
@@ -94,6 +95,12 @@ const App = ():ReactNode => {
 		// Create a Renderer and call the main function
 		try {
 			renderer.current = new Renderer(current, canvasResolution);
+
+			console.log([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+			const testQueue: Queue<number> = new Queue<number>([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+			console.log(testQueue.pop());
+			testQueue.push(10);
+			console.log(testQueue.getList());
 		} catch (e: unknown) {
 			if (e instanceof Error) {
 				console.error(e.name);

@@ -55,6 +55,23 @@ export class Queue<T> {
 		this.front = this.front.next;
 		return data;
 	}
+
+	public getList(): T[] {
+		const list: T[] = [];
+
+		// if not empty
+		if (this.front != null && this.rear != null) {
+			let pointer: QueueNode<T> = this.front;
+			list.push(pointer.data);
+
+			while (pointer != this.rear) {
+				pointer = pointer.next;
+				list.push(pointer.data);
+			}
+		}
+
+		return list;
+	}
 }
 
 
