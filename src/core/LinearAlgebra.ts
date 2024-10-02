@@ -96,6 +96,15 @@ export class Matrix2 {
 	/*
 		Methods
 	*/
+	public det(): number {
+		const a = this.a[0][0];
+		const b = this.a[0][1];
+		const c = this.a[1][0];
+		const d = this.a[1][1];
+		
+		return a*d - b*c;
+	}
+
 	public inverse(): Matrix2 {
 		const a = this.a[0][0];
 		const b = this.a[0][1];
