@@ -114,6 +114,13 @@ export class DoublyLinkedList<T> {
 
 
 
+	/*
+		Getters and Setters
+	*/
+	public getHead(): DoublyLinkedListNode<T> | null {
+		return this.head;
+	}
+
 	public getList(): T[] {
 		const list: T[] = [];
 
@@ -140,7 +147,7 @@ export class DoublyLinkedList<T> {
 
 
 
-class DoublyLinkedListNode<T> {
+export class DoublyLinkedListNode<T> {
 	private data: T;
 	private previous: DoublyLinkedListNode<T> | null;
 	private next: DoublyLinkedListNode<T> | null;

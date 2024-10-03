@@ -74,7 +74,7 @@ const App = ():ReactNode => {
 		if (renderer.current == null)
 			throw new NullError("renderer is null");
 
-		drawTest(renderer.current, canvasResolution, 10, 0.5);
+		drawTest(renderer.current, canvasResolution, 50, 0.5);
 		//setRadiusInfo(generatePointsAndCircle(renderer.current, canvasResolution, numberOfPoints));
 	}
 

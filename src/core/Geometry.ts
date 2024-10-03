@@ -1,5 +1,6 @@
 import { Vector2, Matrix2 } from "./LinearAlgebra";
-import { DoublyLinkedList } from "./DataStructures";
+import { DoublyLinkedList, DoublyLinkedListNode } from "./DataStructures";
+import { NullError } from "./ErrorClasses";
 
 
 
@@ -272,54 +273,76 @@ export class Polygon {
 
 
 	/*
+		Auxiliary Methods
+	*/
+	private static getTriangleFromEar(node: DoublyLinkedListNode<Point>): Triangle {
+		const previous: DoublyLinkedListNode<Point> | null = node.getPrevious();
+		const next: DoublyLinkedListNode<Point> | null = node.getNext();
+
+		if (previous == null)
+			throw new NullError(`previous is null in testPotentialEar`);
+		if (next == null)
+			throw new NullError(`next is null in testPotentialEar`);
+
+		return new Triangle(
+			previous.getData(),
+			node.getData(),
+			next.getData()
+		);
+	}
+
+
+
+	/*
 		Methods
 	*/
-	/*public earClippingTriangulation(): Triangle[] {
+	public earClippingTriangulation(): Triangle[] {
 		// Exit if there is no triangles
 		if (this.vertices.length < 3)
 			return [];
 
 		const triangles: Triangle[] = [];
-		const queue: CircularQueue<Point> = new CircularQueue<Point>(this.vertices);
+		const list: DoublyLinkedList<Point> = new DoublyLinkedList<Point>(this.vertices);
+		const potentialEars: DoublyLinkedListNode<Point>[] = [];
 
-		// Get three vertices in anti-clockwise order
-		let a: Point = queue.pop()!;
-		let b: Point = queue.pop()!;
-		let c: Point = queue.pop()!;
 
-		// Ear clipping
-		while (queue.getSize() > 0) {
-			// Because it's guaranteed there are at least two ears,
-			// test only (n - 2) times and force triangle at the (n - 1)-th time.
-			const size: number = queue.getSize() + 1; // n - 2
 
-			for (let i = 0; i <= size; i++) {
-				const triangle: Triangle = new Triangle(a, b, c);
+		/*
+			Search for potential ears
+		*/
+		// Test if the head is a potential ear
+		let triangle: Triangle;
+		const head: DoublyLinkedListNode<Point> | null = list.getHead();
 
-				if (triangle.signedArea() >= 0 || i == size) {
-					// A diagonal!
-					// Therefore discard the middle point and get the new first
-					console.log(`A diagonal! signed area: ${triangle.signedArea()}, i:${i} of 0-${size}, queue size: ${queue.getSize()}`);
+		if (head == null)
+			throw new NullError("node is null in earClippingTriangulation");
 
-					triangles.push(triangle);
-					[b, c] = [c, queue.pop()!];
+		triangle = Polygon.getTriangleFromEar(head);
+		if (triangle.signedArea() >= 0)
+			potentialEars.push(head);
 
-					break;
-				}
+		// Test if other nodes are potential ears
+		let node: DoublyLinkedListNode<Point> | null = head.getNext();
+		if (node == null)
+			throw new NullError("node is null in earClippingTriangulation");
 
-				// Not a diagonal!
-				// Therefore discard the last vertex and get a new one
-				console.log(`Not a diagonal! signed area: ${triangle.signedArea()}, i:${i} of 0-${size}, queue size: ${queue.getSize()}`);
-				queue.push(a);
-				[a, b, c] = [b, c, queue.pop()!];
-			}
+		while (node != head) {
+			triangle = Polygon.getTriangleFromEar(node);
+			if (triangle.signedArea() >= 0)
+				potentialEars.push(head);
+
+			node = node.getNext();
+			if (node == null)
+				throw new NullError("node is null in earClippingTriangulation");
 		}
 
-		// Last triangle
-		triangles.push(new Triangle(a, b, c));
 
-		return triangles;
-	}*/
+
+		/*
+			Ear Clipping
+		*/
+		return [];
+	}
 
 
 
