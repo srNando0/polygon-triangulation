@@ -6,7 +6,7 @@ export class CircularQueue<T> {
 	private size: number;
 
 	public constructor(list: T[]) {
-		this.list = list;
+		this.list = [...list];
 		this.i = list.length - 1;
 		this.j = 0;
 		this.size = list.length;

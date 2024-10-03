@@ -132,8 +132,10 @@ export class Renderer {
 		this.ctx.lineWidth = width;
 
 		for (const triangle of triangles) {
-			let vertex: Point = triangle.vertices[0];
+			let vertex: Point = triangle.vertices[2];
 			this.ctx.moveTo(vertex.pos.x, vertex.pos.y);
+			vertex = triangle.vertices[0];
+			this.ctx.lineTo(vertex.pos.x, vertex.pos.y);
 			vertex = triangle.vertices[1];
 			this.ctx.lineTo(vertex.pos.x, vertex.pos.y);
 			vertex = triangle.vertices[2];
@@ -158,10 +160,11 @@ export class Renderer {
 		this.ctx.strokeStyle = color;
 		this.ctx.lineWidth = width;
 
-		let vertex: Point = polygon.vertices[0];
+		const numberOfPoints: number = polygon.vertices.length;
+		let vertex: Point = polygon.vertices[numberOfPoints - 1];
 		this.ctx.moveTo(vertex.pos.x, vertex.pos.y);
 
-		for (let i = 1; i < polygon.vertices.length; i++) {
+		for (let i = 0; i < numberOfPoints; i++) {
 			vertex = polygon.vertices[i];
 			this.ctx.lineTo(vertex.pos.x, vertex.pos.y);
 		}

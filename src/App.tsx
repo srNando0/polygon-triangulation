@@ -1,16 +1,53 @@
 import { useState, useEffect, useRef } from "react";
 import { ReactNode, RefObject } from "react";
-import { CircularQueue } from "./core/DataStructures";
 
 import { Resolution, NullError, Renderer } from "./core/Renderer";
 import { Point, Circle, Triangle, Polygon } from "./core/Geometry";
 import { Vector2 } from "./core/LinearAlgebra";
+
+import { CircularQueue } from "./core/DataStructures";
 
 
 
 /*
 	Interfaces
 */
+
+
+
+/*
+	Functions
+*/
+function drawTest(
+	renderer: Renderer,
+	resolution: Resolution,
+	numberOfPoints: number,
+	displacement: number
+) {
+	const center: Point = new Point(new Vector2(resolution.width/2, resolution.height/2));
+	const minResolution: number = (resolution.height < resolution.width) ? resolution.height : resolution.width;
+	const polygon: Polygon = Polygon.randomPolygon(center, 0.8*minResolution/2, numberOfPoints, displacement);
+
+	renderer.drawPolygon(polygon, "white", 2);
+	
+	const queue: CircularQueue<Point> = new CircularQueue<Point>(polygon.vertices);
+
+	const a: Point = queue.pop()!;
+	const b: Point = queue.pop()!;
+	const c: Point = queue.pop()!;
+
+	renderer.drawPoint(a, "red", 8);
+	renderer.drawPoint(b, "green", 8);
+	renderer.drawPoint(c, "blue", 8);
+
+	const triangle: Triangle = new Triangle(a, b, c);
+	console.log(triangle.signedArea());
+
+	const triangles: Triangle[] = polygon.earClippingTriangulation();
+
+	renderer.drawTriangles(triangles, "blue", 1);
+	renderer.drawTriangle(triangles[0], "green", 1);
+}
 
 
 
@@ -35,6 +72,7 @@ const App = ():ReactNode => {
 		if (renderer.current == null)
 			throw new NullError("renderer is null");
 
+		drawTest(renderer.current, canvasResolution, 10, 0.5);
 		//setRadiusInfo(generatePointsAndCircle(renderer.current, canvasResolution, numberOfPoints));
 	}
 
@@ -95,8 +133,6 @@ const App = ():ReactNode => {
 		// Create a Renderer and call the main function
 		try {
 			renderer.current = new Renderer(current, canvasResolution);
-
-
 		} catch (e: unknown) {
 			if (e instanceof Error) {
 				console.error(e.name);

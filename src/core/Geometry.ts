@@ -240,7 +240,7 @@ export class Triangle {
 	/*
 		Methods
 	*/
-	public isInverted(): boolean {
+	public signedArea(): number {
 		const [a, b, c]: [Point, Point, Point] = this.vertices;
 
 		// vectors u = b - a, v = c - a
@@ -256,7 +256,7 @@ export class Triangle {
 			[u.y, v.y]
 		]);
 
-		return (M.det() < 0) ? true : false;
+		return M.det()/2;
 	}
 }
 
@@ -282,26 +282,41 @@ export class Polygon {
 		const triangles: Triangle[] = [];
 		const queue: CircularQueue<Point> = new CircularQueue<Point>(this.vertices);
 
-		// Get three points in anti-clockwise order
+		// Get three vertices in anti-clockwise order
 		let a: Point = queue.pop()!;
 		let b: Point = queue.pop()!;
 		let c: Point = queue.pop()!;
 
+		// Ear clipping
 		while (queue.getSize() > 0) {
-			const triangle: Triangle = new Triangle(a, b, c);
+			// Because it's guaranteed there are at least two ears,
+			// test only (n - 2) times and force triangle at the (n - 1)-th time.
+			const size: number = queue.getSize() + 1; // n - 2
 
-			if (triangle.isInverted()) {
+			for (let i = 0; i <= size; i++) {
+				const triangle: Triangle = new Triangle(a, b, c);
+
+				if (triangle.signedArea() >= 0 || i == size) {
+					// A diagonal!
+					// Therefore discard the middle point and get the new first
+					console.log(`A diagonal! signed area: ${triangle.signedArea()}, i:${i} of 0-${size}, queue size: ${queue.getSize()}`);
+
+					triangles.push(triangle);
+					[b, c] = [c, queue.pop()!];
+
+					break;
+				}
+
 				// Not a diagonal!
 				// Therefore discard the last vertex and get a new one
+				console.log(`Not a diagonal! signed area: ${triangle.signedArea()}, i:${i} of 0-${size}, queue size: ${queue.getSize()}`);
 				queue.push(a);
 				[a, b, c] = [b, c, queue.pop()!];
-			} else {
-				// A diagonal!
-				// Therefore discard the middle point and get the new first
-				triangles.push(triangle);
-				[b, c] = [c, queue.pop()!];
 			}
 		}
+
+		// Last triangle
+		triangles.push(new Triangle(a, b, c));
 
 		return triangles;
 	}
@@ -311,17 +326,17 @@ export class Polygon {
 	/*
 		Static Methods
 	*/
-	public randomPolygon(center: Point, radius: number, numberOfPoints: number, displacement: number) {
+	public static randomPolygon(center: Point, radius: number, numberOfPoints: number, displacement: number): Polygon {
 		const thetas: number[] = [];
 		const radii: number[] = [];
 
 		for (let i = 0; i < numberOfPoints; i++) {
 			thetas.push(Math.random()*2*Math.PI);
-			radii.push(radius*Math.sqrt(1 - Math.random()*displacement));
+			radii.push(radius*(1 - Math.random()*displacement));
 		}
 
 		thetas.sort();
-		const points: Point[] = [];
+		const vertices: Point[] = [];
 
 		for (let i = 0; i < numberOfPoints; i++) {
 			const vector: Vector2 = new Vector2(
@@ -329,9 +344,9 @@ export class Polygon {
 				radii[i]*Math.sin(thetas[i])
 			);
 
-			points.push(Point.add(center, vector));
+			vertices.push(Point.add(center, vector));
 		}
 
-		return points;
+		return new Polygon(vertices);
 	}
 }
