@@ -1,3 +1,4 @@
+import { NullError } from "./ErrorClasses.ts";
 import { Point, Circle, Triangle, Polygon } from "./Geometry.ts";
 
 
@@ -8,18 +9,6 @@ import { Point, Circle, Triangle, Polygon } from "./Geometry.ts";
 export interface Resolution {
 	width: number,
 	height: number
-}
-
-
-
-/*
-	Error classes
-*/
-export class NullError extends Error {
-	public constructor(message: string) {
-		super(message);
-		this.name = "NullError";
-	}
 }
 
 

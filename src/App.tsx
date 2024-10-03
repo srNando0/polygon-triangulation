@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { ReactNode, RefObject } from "react";
 
-import { Resolution, NullError, Renderer } from "./core/Renderer";
+import { NullError } from "./core/ErrorClasses";
+import { Resolution, Renderer } from "./core/Renderer";
 import { Point, Circle, Triangle, Polygon } from "./core/Geometry";
 import { Vector2 } from "./core/LinearAlgebra";
-
-import { CircularQueue } from "./core/DataStructures";
+import { DoublyLinkedList } from "./core/DataStructures";
 
 
 
@@ -30,11 +30,11 @@ function drawTest(
 
 	renderer.drawPolygon(polygon, "white", 2);
 	
-	const queue: CircularQueue<Point> = new CircularQueue<Point>(polygon.vertices);
+	const list: DoublyLinkedList<Point> = new DoublyLinkedList<Point>(polygon.vertices);
 
-	const a: Point = queue.pop()!;
-	const b: Point = queue.pop()!;
-	const c: Point = queue.pop()!;
+	const a: Point = list.pop()!;
+	const b: Point = list.pop()!;
+	const c: Point = list.pop()!;
 
 	renderer.drawPoint(a, "red", 8);
 	renderer.drawPoint(b, "green", 8);
@@ -43,10 +43,10 @@ function drawTest(
 	const triangle: Triangle = new Triangle(a, b, c);
 	console.log(triangle.signedArea());
 
-	const triangles: Triangle[] = polygon.earClippingTriangulation();
+	/*const triangles: Triangle[] = polygon.earClippingTriangulation();
 
 	renderer.drawTriangles(triangles, "blue", 1);
-	renderer.drawTriangle(triangles[0], "green", 1);
+	renderer.drawTriangle(triangles[0], "green", 1);*/
 }
 
 

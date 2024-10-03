@@ -1,5 +1,5 @@
 import { Vector2, Matrix2 } from "./LinearAlgebra";
-import { CircularQueue } from "./DataStructures";
+import { DoublyLinkedList } from "./DataStructures";
 
 
 
@@ -274,7 +274,7 @@ export class Polygon {
 	/*
 		Methods
 	*/
-	public earClippingTriangulation(): Triangle[] {
+	/*public earClippingTriangulation(): Triangle[] {
 		// Exit if there is no triangles
 		if (this.vertices.length < 3)
 			return [];
@@ -319,7 +319,7 @@ export class Polygon {
 		triangles.push(new Triangle(a, b, c));
 
 		return triangles;
-	}
+	}*/
 
 
 
