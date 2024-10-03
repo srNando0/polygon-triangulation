@@ -24,6 +24,8 @@ function drawTest(
 	numberOfPoints: number,
 	displacement: number
 ) {
+	renderer.clear();
+
 	const center: Point = new Point(new Vector2(resolution.width/2, resolution.height/2));
 	const minResolution: number = (resolution.height < resolution.width) ? resolution.height : resolution.width;
 	const polygon: Polygon = Polygon.randomPolygon(center, 0.8*minResolution/2, numberOfPoints, displacement);

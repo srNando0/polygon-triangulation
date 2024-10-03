@@ -44,8 +44,11 @@ export class DoublyLinkedList<T> {
 		if (previous == null)
 			throw new NullError(`previous is null while trying to insert ${data} before ${node.getData()}`);
 
+		newNode.setPrevious(previous);
+		newNode.setNext(node);
 		node.setPrevious(newNode);
 		previous.setNext(newNode);
+
 
 		this.size++;
 	}
@@ -56,6 +59,9 @@ export class DoublyLinkedList<T> {
 		const next: DoublyLinkedListNode<T> | null = node.getNext();
 		if (next == null)
 			throw new NullError(`next is null while trying to insert ${data} after ${node.getData()}`);
+
+		newNode.setPrevious(node);
+		newNode.setNext(next);
 
 		node.setNext(newNode);
 		next.setPrevious(newNode);
