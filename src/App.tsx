@@ -45,10 +45,10 @@ function drawTest(
 	const triangle: Triangle = new Triangle(a, b, c);
 	console.log(triangle.signedArea());
 
-	/*const triangles: Triangle[] = polygon.earClippingTriangulation();
+	const triangles: Triangle[] = polygon.earClippingTriangulation();
 
 	renderer.drawTriangles(triangles, "blue", 1);
-	renderer.drawTriangle(triangles[0], "green", 1);*/
+	//renderer.drawTriangle(triangles[1], "green", 10);
 }
 
 

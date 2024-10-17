@@ -259,6 +259,23 @@ export class Triangle {
 
 		return M.det()/2;
 	}
+
+
+
+	public collisionPoint(p: Point): boolean {
+		const thisSign: number = Math.sign(this.signedArea());
+
+		for (let i = 0; i < 3; i++) {
+			const [a, b]: [Point, Point] = [this.vertices[i], this.vertices[i + 1]];
+			const triangle: Triangle = new Triangle(a, b, p);
+			const sign: number = Math.sign(triangle.signedArea());
+
+			if (thisSign*sign == -1)
+				return false;
+		}
+
+		return true;
+	}
 }
 
 
@@ -291,6 +308,10 @@ export class Polygon {
 		);
 	}
 
+	private getPotentialEars(): DoublyLinkedListNode<Point>[] {
+		return []
+	}
+
 
 
 	/*
@@ -315,7 +336,7 @@ export class Polygon {
 		const head: DoublyLinkedListNode<Point> | null = list.getHead();
 
 		if (head == null)
-			throw new NullError("node is null in earClippingTriangulation");
+			throw new NullError("head is null in earClippingTriangulation");
 
 		triangle = Polygon.getTriangleFromEar(head);
 		if (triangle.signedArea() >= 0)
@@ -324,12 +345,12 @@ export class Polygon {
 		// Test if other nodes are potential ears
 		let node: DoublyLinkedListNode<Point> | null = head.getNext();
 		if (node == null)
-			throw new NullError("node is null in earClippingTriangulation");
+			throw new NullError("node next to head is null in earClippingTriangulation");
 
 		while (node != head) {
 			triangle = Polygon.getTriangleFromEar(node);
 			if (triangle.signedArea() >= 0)
-				potentialEars.push(head);
+				potentialEars.push(node);
 
 			node = node.getNext();
 			if (node == null)
@@ -341,7 +362,9 @@ export class Polygon {
 		/*
 			Ear Clipping
 		*/
-		return [];
+		return potentialEars.map(
+			(ear: DoublyLinkedListNode<Point>) => Polygon.getTriangleFromEar(ear)
+		);
 	}
 
 
