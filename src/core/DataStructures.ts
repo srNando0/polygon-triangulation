@@ -1,190 +1,162 @@
 import { NullError } from "./ErrorClasses";
 
-
-
 export class DoublyLinkedList<T> {
-	private head: DoublyLinkedListNode<T> | null;
-	private size: number;
+    private head: DoublyLinkedListNode<T> | null;
+    private size: number;
 
-	public constructor(list: T[]) {
-		this.head = null;
-		this.size = 0;
+    public constructor(list: T[]) {
+        this.head = null;
+        this.size = 0;
 
-		for (const element of list)
-			this.push(element);
-	}
+        for (const element of list) this.push(element);
+    }
 
-
-
-	/*
+    /*
 		Methods
 	*/
-	public remove(node: DoublyLinkedListNode<T>): void {
-		const previous: DoublyLinkedListNode<T> | null = node.getPrevious();
-		const next: DoublyLinkedListNode<T> | null = node.getNext();
+    public remove(node: DoublyLinkedListNode<T>): void {
+        const previous: DoublyLinkedListNode<T> = node.getPrevious();
+        const next: DoublyLinkedListNode<T> = node.getNext();
 
-		if (previous == null)
-			throw new NullError(`previous is null while trying to remove ${node.getData()}`);
-		if (next == null)
-			throw new NullError(`next is null while trying to remove ${node.getData()}`);
+        previous.setNext(next);
+        next.setPrevious(previous);
 
-		previous.setNext(next);
-		next.setPrevious(previous);
+        if (this.head == node)
+            if (this.head == next) this.head = null;
+            else this.head = next;
 
-		if (this.head == node)
-			this.head = next;
+        this.size--;
+    }
 
-		this.size--;
-	}
+    public insertBefore(data: T, node: DoublyLinkedListNode<T>): void {
+        const newNode: DoublyLinkedListNode<T> = new DoublyLinkedListNode<T>(
+            data,
+        );
 
-	public insertBefore(data: T, node: DoublyLinkedListNode<T>): void {
-		const newNode: DoublyLinkedListNode<T> = new DoublyLinkedListNode<T>(data);
+        const previous: DoublyLinkedListNode<T> = node.getPrevious();
 
-		const previous: DoublyLinkedListNode<T> | null = node.getPrevious();
-		if (previous == null)
-			throw new NullError(`previous is null while trying to insert ${data} before ${node.getData()}`);
+        newNode.setPrevious(previous);
+        newNode.setNext(node);
+        node.setPrevious(newNode);
+        previous.setNext(newNode);
 
-		newNode.setPrevious(previous);
-		newNode.setNext(node);
-		node.setPrevious(newNode);
-		previous.setNext(newNode);
+        this.size++;
+    }
 
+    public insertAfter(data: T, node: DoublyLinkedListNode<T>): void {
+        const newNode: DoublyLinkedListNode<T> = new DoublyLinkedListNode<T>(
+            data,
+        );
 
-		this.size++;
-	}
+        const next: DoublyLinkedListNode<T> = node.getNext();
 
-	public insertAfter(data: T, node: DoublyLinkedListNode<T>): void {
-		const newNode: DoublyLinkedListNode<T> = new DoublyLinkedListNode<T>(data);
+        newNode.setPrevious(node);
+        newNode.setNext(next);
 
-		const next: DoublyLinkedListNode<T> | null = node.getNext();
-		if (next == null)
-			throw new NullError(`next is null while trying to insert ${data} after ${node.getData()}`);
+        node.setNext(newNode);
+        next.setPrevious(newNode);
 
-		newNode.setPrevious(node);
-		newNode.setNext(next);
+        this.size++;
+    }
 
-		node.setNext(newNode);
-		next.setPrevious(newNode);
+    public push(data: T): void {
+        if (this.head == null) {
+            // size = 0
+            const node: DoublyLinkedListNode<T> = new DoublyLinkedListNode<T>(
+                data,
+            );
 
-		this.size++;
-	}
+            this.head = node;
+            this.head.setNext(node);
+            this.head.setPrevious(node);
 
+            this.size++;
+        } else {
+            // size > 0
+            this.insertBefore(data, this.head);
+        }
+    }
 
+    public pop(): T | null {
+        // size = 0
+        if (this.head == null) return null;
 
-	public push(data: T): void {
-		if (this.head == null) {
-			// size = 0
-			const node: DoublyLinkedListNode<T> = new DoublyLinkedListNode<T>(data);
+        // size > 0
+        const tail: DoublyLinkedListNode<T> = this.head.getPrevious();
+        const data: T = tail.getData();
 
-			this.head = node;
-			this.head.setNext(node);
-			this.head.setPrevious(node);
+        this.remove(tail);
 
-			this.size++;
-		} else {
-			// size > 0
-			this.insertBefore(data, this.head);
-		}
-	}
+        return data;
+    }
 
-	public pop(): T | null {
-		// size = 0
-		if (this.head == null)
-			return null;
-
-		// size = 1
-		if (this.size == 1) {
-			const data: T = this.head.getData();
-			this.head = null;
-			this.size--;
-			return data;
-		}
-
-		// size > 1
-		const tail: DoublyLinkedListNode<T> | null = this.head.getPrevious();
-		if (tail == null)
-			throw new NullError(`tail is null while trying to pop`);
-
-		const data: T = tail.getData();
-
-		this.remove(tail);
-
-		return data;
-	}
-
-
-
-	/*
+    /*
 		Getters and Setters
 	*/
-	public getHead(): DoublyLinkedListNode<T> | null {
-		return this.head;
-	}
+    public getHead(): DoublyLinkedListNode<T> | null {
+        return this.head;
+    }
 
-	public getList(): T[] {
-		const list: T[] = [];
+    public getSize(): number {
+        return this.size;
+    }
 
-		// size = 0
-		if (this.head == null)
-			return list;
+    public getList(): T[] {
+        const list: T[] = [];
 
-		// size > 0
-		list.push(this.head.getData());
+        // size = 0
+        if (this.head == null) return list;
 
-		let node: DoublyLinkedListNode<T> | null = this.head.getNext();
+        // size > 0
+        list.push(this.head.getData());
 
-		while (node != this.head) {
-			if (node == null)
-				throw new NullError("node is null while trying to get list");
+        let node: DoublyLinkedListNode<T> = this.head.getNext();
 
-			list.push(node.getData());
-			node = node.getNext();
-		}
+        while (node != this.head) {
+            list.push(node.getData());
+            node = node.getNext();
+        }
 
-		return list;
-	}
+        return list;
+    }
 }
-
-
 
 export class DoublyLinkedListNode<T> {
-	private data: T;
-	private previous: DoublyLinkedListNode<T> | null;
-	private next: DoublyLinkedListNode<T> | null;
+    private data: T;
+    private previous: DoublyLinkedListNode<T> | null;
+    private next: DoublyLinkedListNode<T> | null;
 
-	public constructor(data: T) {
-		this.data = data;
-		this.previous = null;
-		this.next = null;
-	}
+    public constructor(data: T) {
+        this.data = data;
+        this.previous = null;
+        this.next = null;
+    }
 
-
-
-	/*
+    /*
 		Getters and Setters
 	*/
-	public getData(): T {
-		return this.data;
-	}
-	public getPrevious(): DoublyLinkedListNode<T> | null {
-		return this.previous;
-	}
-	public getNext(): DoublyLinkedListNode<T> | null {
-		return this.next;
-	}
+    public getData(): T {
+        return this.data;
+    }
+    public getPrevious(): DoublyLinkedListNode<T> {
+        if (this.previous == null) throw new NullError("previous is null");
+        return this.previous;
+    }
+    public getNext(): DoublyLinkedListNode<T> {
+        if (this.next == null) throw new NullError("next is null");
+        return this.next;
+    }
 
-	public setData(data: T): void {
-		this.data = data;
-	}
-	public setPrevious(node: DoublyLinkedListNode<T>): void {
-		this.previous = node;
-	}
-	public setNext(node: DoublyLinkedListNode<T>): void {
-		this.next = node;
-	}
+    public setData(data: T): void {
+        this.data = data;
+    }
+    public setPrevious(node: DoublyLinkedListNode<T>): void {
+        this.previous = node;
+    }
+    public setNext(node: DoublyLinkedListNode<T>): void {
+        this.next = node;
+    }
 }
-
-
 
 /*export class CircularQueue<T> {
 	// list: [_, i, *, *, *j, _]
@@ -256,8 +228,6 @@ export class DoublyLinkedListNode<T> {
 		return list;
 	}
 }*/
-
-
 
 /*export class Queue<T> {
 	private front: QueueNode<T> | null;
